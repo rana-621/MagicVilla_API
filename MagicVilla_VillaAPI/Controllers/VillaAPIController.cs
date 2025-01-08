@@ -7,7 +7,7 @@ namespace MagicVilla_VillaAPI.Controllers
 {
     //[Route("api/VillaAPI")] 
     [Route("/VillaAPI")]
-    [ApiController]
+    //[ApiController]
     public class VillaAPIController : ControllerBase
     {
         [HttpGet]
