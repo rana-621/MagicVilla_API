@@ -1,3 +1,6 @@
+using MagicVilla_VillaAPI.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace MagicVilla_VillaAPI
 {
     public class Program
@@ -26,6 +29,10 @@ namespace MagicVilla_VillaAPI
             //builder.Services.AddSingleton<ILogging, Logging.Logging>();
             //builder.Services.AddSingleton<ILogging, Logging.LoggingV2>();
 
+            builder.Services.AddDbContext<ApplicationDbContext>(option =>
+            {
+                option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection"));
+            });
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
