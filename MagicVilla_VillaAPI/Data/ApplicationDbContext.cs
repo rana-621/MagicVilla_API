@@ -18,8 +18,8 @@ namespace MagicVilla_VillaAPI.Data
                 {
                     Id = 1,
                     Name = "Royla Villa",
-                    Details = "",
-                    ImageUrl = "",
+                    Details = "Fusce 11 tincidunt maximus leo, sed scelerisque massa auctor sit amet. Donec ex mauris, hendrerit quis nibh ac, efficitur fringilla enim.",
+                    ImageUrl = "http://dotnetmastery.com/bluevillaimages/villa3.jpg",
                     Occupancy = 5,
                     Rate = 200,
                     Sqft = 500,
