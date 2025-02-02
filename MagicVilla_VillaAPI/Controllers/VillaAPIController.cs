@@ -115,6 +115,7 @@ namespace MagicVilla_VillaAPI.Controllers
                 Sqft = villaDTO.Sqft
             };
             _db.Villas.Add(model);
+            _db.SaveChanges();
 
             // return Ok(villaDTO);
             //  return CreatedAtRoute("GetVilla", villaDTO);
@@ -151,10 +152,23 @@ namespace MagicVilla_VillaAPI.Controllers
             {
                 return BadRequest();
             }
-            var villa = VillaStore.villaList.FirstOrDefault(u => u.Id == id);
-            villa.Name = villaDTO.Name;
-            villa.Occupancy = villaDTO.Occupancy;
-            villa.Sqft = villaDTO.Sqft;
+            //var villa = VillaStore.villaList.FirstOrDefault(u => u.Id == id);
+            //villa.Name = villaDTO.Name;
+            //villa.Occupancy = villaDTO.Occupancy;
+            //villa.Sqft = villaDTO.Sqft;
+
+            Villa model = new()
+            {
+                Amenity = villaDTO.Amenity,
+                Details = villaDTO.Details,
+                ImageUrl = villaDTO.ImageUrl,
+                Name = villaDTO.Name,
+                Occupancy = villaDTO.Occupancy,
+                //Rate = villaDTO.Rate,
+                Sqft = villaDTO.Sqft
+            };
+            _db.Update(model);
+            _db.SaveChanges();
 
             return NoContent();
         }
@@ -171,12 +185,25 @@ namespace MagicVilla_VillaAPI.Controllers
             {
                 return BadRequest();
             }
-            var villa = VillaStore.villaList.FirstOrDefault(u => u.Id == id);
+            //var villa = VillaStore.villaList.FirstOrDefault(u => u.Id == id);
+            var villa = _db.Villas.FirstOrDefault(u => u.Id == id);
+            VillaDTO villaDTO = new()
+            {
+                Amenity = villa.Amenity,
+                Details = villa.Details,
+                ImageUrl = villa.ImageUrl,
+                Name = villa.Name,
+                Occupancy = villa.Occupancy,
+                Rate = villa.Rate,
+                Sqft = villa.Sqft
+            };
             if (villa == null)
             {
                 return BadRequest();
             }
-            patchDTO.ApplyTo(villa, ModelState);
+
+
+            patchDTO.ApplyTo(villaDTO, ModelState);
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
