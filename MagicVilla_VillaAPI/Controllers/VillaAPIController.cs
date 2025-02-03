@@ -187,7 +187,7 @@ namespace MagicVilla_VillaAPI.Controllers
             }
             //var villa = VillaStore.villaList.FirstOrDefault(u => u.Id == id);
             var villa = _db.Villas.FirstOrDefault(u => u.Id == id);
-            VillaDTO villaDTO = new()
+            VillaDTO model = new()
             {
                 Amenity = villa.Amenity,
                 Details = villa.Details,
@@ -197,13 +197,17 @@ namespace MagicVilla_VillaAPI.Controllers
                 Rate = villa.Rate,
                 Sqft = villa.Sqft
             };
+
+            _db.Update(model);
+            _db.SaveChanges();
+
             if (villa == null)
             {
                 return BadRequest();
             }
 
 
-            patchDTO.ApplyTo(villaDTO, ModelState);
+            //patchDTO.ApplyTo(villaDTO, ModelState);
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
