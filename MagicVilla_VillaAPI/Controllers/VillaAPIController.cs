@@ -189,6 +189,7 @@ namespace MagicVilla_VillaAPI.Controllers
             var villa = _db.Villas.FirstOrDefault(u => u.Id == id);
             //update the name of the villa automatically
             villa.Name = "new name";
+            _db.SaveChanges();
 
             VillaDTO model = new()
             {
