@@ -13,21 +13,6 @@ namespace MagicVilla_VillaAPI.Controllers
     [ApiController]
     public class VillaAPIController : ControllerBase
     {
-
-
-        //private readonly ILogger<VillaAPIController> _logger;
-
-        //public VillaAPIController(ILogger<VillaAPIController> logger)
-        //{
-        //    _logger = logger;
-        //}
-
-        //private readonly ILogging _logger;
-        //public VillaAPIController(ILogging logger)
-        //{
-        //    _logger = logger;
-        //}
-
         private readonly ApplicationDbContext _db;
         public VillaAPIController()
         {
@@ -38,34 +23,21 @@ namespace MagicVilla_VillaAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public ActionResult<IEnumerable<VillaDTO>> GetVillas()
         {
-            //_logger.LogInformation("Get All Villas");
-            //_logger.Log("Get All Villas", "");
-            //return Ok(VillaStore.villaList);
-
             return Ok(_db.Villas.ToList());
         }
-        [HttpGet("{id:int}", Name = "GetVilla")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-        //[ProducesResponseType(200, Type=typeof(VillaDTO))]
-        //[ProducesResponseType(400)]
-        //[ProducesResponseType(404)]
+        [HttpGet("{id:int}", Name = "GetVilla")]
         public ActionResult<VillaDTO> GetVilla(int id)
         {
             if (id == 0)
             {
-                //_logger.Log("Get Villa Error with id" + id, "error");
                 return BadRequest();
             }
-            //var villa = VillaStore.villaList.FirstOrDefault(u => u.Id == id);
             var villa = _db.Villas.FirstOrDefault(x => x.Id == id);
             if (villa == null)
             {
                 return NotFound();
             }
-
             return Ok(VillaStore.villaList.FirstOrDefault(u => u.Id == id));
 
         }
@@ -186,10 +158,8 @@ namespace MagicVilla_VillaAPI.Controllers
             {
                 return BadRequest();
             }
-            //var villa = VillaStore.villaList.FirstOrDefault(u => u.Id == id);
             var villa = _db.Villas.AsNoTracking().FirstOrDefault(u => u.Id == id);
 
-            //update the name of the villa automatically
             villa.Name = "new name";
             _db.SaveChanges();
 
