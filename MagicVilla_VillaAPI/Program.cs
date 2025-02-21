@@ -20,7 +20,10 @@ namespace MagicVilla_VillaAPI
             //builder.Host.UseSerilog();
 
             builder.Services
-                .AddControllers(Option => { Option.ReturnHttpNotAcceptable = true; })
+                .AddControllers(Option =>
+                {
+                    //Option.ReturnHttpNotAcceptable = true; 
+                })
                 .AddNewtonsoftJson()
                 .AddXmlDataContractSerializerFormatters();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
