@@ -155,13 +155,13 @@ namespace MagicVilla_VillaAPI.Controllers
                 return BadRequest();
             }
             //var villa =await _db.Villas.FirstOrDefaultAsync(u => u.Id == id);
-            var villa = _db.Villas.AsNoTracking().FirstOrDefault(u => u.Id == id);
+            var villa = await _db.Villas.AsNoTracking().FirstOrDefaultAsync(u => u.Id == id);
 
             //To test the change of name and then do AsNoTracking to not change 
             //villa.Name = "new name";
             //_db.SaveChanges();
 
-            VillaUpdateDTO model = new()
+            VillaUpdateDTO villaDto = new()
             {
                 Amenity = villa.Amenity,
                 Details = villa.Details,
@@ -172,10 +172,27 @@ namespace MagicVilla_VillaAPI.Controllers
                 Sqft = villa.Sqft
             };
 
+            if (villa == null)
+            {
+                return BadRequest();
+            }
+            patchDTO.ApplyTo(villaDto, ModelState);
+
+            Villa model = new()
+            {
+                Amenity = villaDto.Amenity,
+                Details = villaDto.Details,
+                ImageUrl = villaDto.ImageUrl,
+                Name = villaDto.Name,
+                Occupancy = villaDto.Occupancy,
+                Id = id,
+                Rate = villaDto.Rate,
+                Sqft = villaDto.Sqft
+            };
+
             _db.Update(model);
             await _db.SaveChangesAsync();
 
-            //patchDTO.ApplyTo(villaDTO, ModelState);
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);

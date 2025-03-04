@@ -9,36 +9,22 @@ namespace MagicVilla_VillaAPI
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
-
-            //Log.Logger = new LoggerConfiguration()
-            //    .MinimumLevel.Debug()
-            //    .WriteTo
-            //    .File("log/villaLogs.txt", rollingInterval: RollingInterval.Day)
-            //    .CreateLogger();
-
-            //builder.Host.UseSerilog();
 
             builder.Services
-                .AddControllers(Option =>
-                {
-                    //Option.ReturnHttpNotAcceptable = true; 
-                })
+                .AddControllers(Option => { })
                 .AddNewtonsoftJson()
                 .AddXmlDataContractSerializerFormatters();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            //builder.Services.AddSingleton<ILogging, Logging.Logging>();
-            //builder.Services.AddSingleton<ILogging, Logging.LoggingV2>();
 
             builder.Services.AddDbContext<ApplicationDbContext>(option =>
             {
                 option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection"));
             });
+
+            builder.Services.AddAutoMapper(typeof(MapppingConfig));
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
