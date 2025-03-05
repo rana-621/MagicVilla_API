@@ -145,7 +145,7 @@ namespace MagicVilla_VillaAPI.Controllers
             //    Rate = updateDTO.Rate,
             //    Sqft = updateDTO.Sqft
             //};
-            await _dbVilla.UpdateAsyc(model);
+            await _dbVilla.UpdateAsync(model);
 
             return NoContent();
         }
@@ -202,7 +202,7 @@ namespace MagicVilla_VillaAPI.Controllers
             //    Sqft = villaDto.Sqft
             //};
 
-            await _dbVilla.UpdateAsyc(model);
+            await _dbVilla.UpdateAsync(model);
 
             if (!ModelState.IsValid)
             {
