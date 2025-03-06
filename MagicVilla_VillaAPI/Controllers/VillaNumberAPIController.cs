@@ -133,7 +133,7 @@ namespace MagicVilla_VillaAPI.Controllers
         }
 
         [HttpDelete("{villaNo:int}", Name = "DeleteVillaNumber")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<APIResponse>> DeleteVillaNumber(int villaNo)
         {
