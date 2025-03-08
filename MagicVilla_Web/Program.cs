@@ -8,7 +8,7 @@ namespace MagicVilla_Web
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-
+            builder.Services.AddAutoMapper(typeof(MapppingConfig));
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
