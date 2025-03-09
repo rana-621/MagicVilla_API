@@ -1,3 +1,6 @@
+using MagicVilla_Web.Services;
+using MagicVilla_Web.Services.IServices;
+
 namespace MagicVilla_Web
 {
     public class Program
@@ -9,6 +12,10 @@ namespace MagicVilla_Web
             // Add services to the container.
             builder.Services.AddControllersWithViews();
             builder.Services.AddAutoMapper(typeof(MapppingConfig));
+
+            builder.Services.AddHttpClient<IVillaService, VillaService>();
+            builder.Services.AddScoped<IVillaService, VillaService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
