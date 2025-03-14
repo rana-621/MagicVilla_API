@@ -61,14 +61,17 @@ namespace MagicVilla_Web.Controllers
             }
             return NotFound();
         }
-        [HttpPut]
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> UpdateVilla(VillaUpdateDTO model)
         {
-            var response = await _villaService.UpdateAsync<APIResponse>(model);
-            if (response != null && response.IsSuccess)
+            if (ModelState.IsValid)
             {
-                return RedirectToAction(nameof(IndexVilla));
+                var response = await _villaService.UpdateAsync<APIResponse>(model);
+                if (response != null && response.IsSuccess)
+                {
+                    return RedirectToAction(nameof(IndexVilla));
+                }
             }
             return View(model);
         }
