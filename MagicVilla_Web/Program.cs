@@ -15,11 +15,7 @@ namespace MagicVilla_Web
 
             builder.Services.AddHttpClient<IVillaService, VillaService>();
             builder.Services.AddScoped<IVillaService, VillaService>();
-            //builder.Services.AddHttpClient("MagicApi", client =>
-            //{
-            //	client.BaseAddress = new Uri("http://localhost:7001");
-            //	client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            //});
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
