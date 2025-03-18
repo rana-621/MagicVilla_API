@@ -9,9 +9,10 @@ namespace MagicVilla_Web.Controllers
 		public readonly IVillaNumberService _villaNumberService;
 		public readonly IMapper _mapper;
 
-		public VillaNumberController(IVillaNumberService villaNumberService)
+		public VillaNumberController(IVillaNumberService villaNumberService, IMapper mapper)
 		{
 			_villaNumberService = villaNumberService;
+			_mapper = mapper;
 		}
 
 		public IActionResult Index()
