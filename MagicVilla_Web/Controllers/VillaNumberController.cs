@@ -14,5 +14,9 @@ namespace MagicVilla_Web.Controllers
 			_villaNumberService = villaNumberService;
 		}
 
+		public IActionResult Index()
+		{
+			return View();
+		}
 	}
 }
