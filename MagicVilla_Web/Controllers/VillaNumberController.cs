@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
+using MagicVilla_Web.Models;
+using MagicVilla_Web.Models.Dto;
 using MagicVilla_Web.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace MagicVilla_Web.Controllers
 {
@@ -15,9 +18,15 @@ namespace MagicVilla_Web.Controllers
 			_mapper = mapper;
 		}
 
-		public IActionResult Index()
+		public async Task<IActionResult> IndexVillaNumber()
 		{
-			return View();
+			List<VillaNumberDto> list = new();
+			var response = await _villaNumberService.GetAllAsync<APIResponse>();
+			if (response != null && response.IsSuccess)
+			{
+				list = JsonConvert.DeserializeObject<List<VillaNumberDto>>(Convert.ToString(response.Result));
+			}
+			return View(list);
 		}
 	}
 }
