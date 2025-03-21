@@ -15,10 +15,11 @@ namespace MagicVilla_Web.Controllers
         public readonly IVillaService _villaService;
         public readonly IMapper _mapper;
 
-        public VillaNumberController(IVillaNumberService villaNumberService, IMapper mapper)
+        public VillaNumberController(IVillaNumberService villaNumberService, IMapper mapper, IVillaService villaService)
         {
             _villaNumberService = villaNumberService;
             _mapper = mapper;
+            _villaService = villaService;
         }
 
         public async Task<IActionResult> IndexVillaNumber()
@@ -34,7 +35,7 @@ namespace MagicVilla_Web.Controllers
 
         public async Task<ActionResult> CreateVillaNumber()
         {
-            ViillaNumberCreateVM villaNumberVM = new();
+            VillaNumberCreateVM villaNumberVM = new();
             var response = await _villaService.GetAllAsync<APIResponse>();
             if (response != null && response.IsSuccess)
             {
@@ -51,11 +52,11 @@ namespace MagicVilla_Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateVillaNumber(VillaNumberCreateDto model)
+        public async Task<ActionResult> CreateVillaNumber(VillaNumberCreateVM model)
         {
             if (ModelState.IsValid)
             {
-                var response = await _villaNumberService.CreateAsync<APIResponse>(model);
+                var response = await _villaNumberService.CreateAsync<APIResponse>(model.VillaNumber);
                 if (response != null && response.IsSuccess)
                 {
                     return RedirectToAction(nameof(IndexVillaNumber));

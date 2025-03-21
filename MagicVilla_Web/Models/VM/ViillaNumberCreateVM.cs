@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace MagicVilla_Web.Models.VM
 {
-    public class ViillaNumberCreateVM
+    public class VillaNumberCreateVM
     {
-        public ViillaNumberCreateVM()
+        public VillaNumberCreateVM()
         {
             VillaNumber = new VillaNumberCreateDto();
         }
