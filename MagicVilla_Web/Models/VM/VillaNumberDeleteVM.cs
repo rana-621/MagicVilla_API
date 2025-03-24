@@ -10,7 +10,6 @@ namespace MagicVilla_Web.Models.VM
         {
             VillaNumber = new VillaNumberDto();
         }
-
         public VillaNumberDto VillaNumber { get; set; }
         [ValidateNever]
         public IEnumerable<SelectListItem> VillaList { get; set; }

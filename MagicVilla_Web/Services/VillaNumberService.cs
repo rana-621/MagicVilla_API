@@ -59,7 +59,7 @@ namespace MagicVilla_Web.Services
             return await SendAsync<T>(new APIRequest
             {
                 ApiType = SD.ApiType.PUT,
-                Url = villaNumberUrl + "/api/VillaNumberAPI",
+                Url = villaNumberUrl + "/api/VillaNumberAPI/" + dto.VillaNo,
                 Data = dto
             });
         }

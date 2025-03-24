@@ -133,9 +133,8 @@ namespace MagicVilla_VillaAPI.Controllers
                     return BadRequest(ModelState);
                 }
 
-
-                VillaNumber villaNumber = _mapper.Map<VillaNumber>(villaUpdateDto);
-                await _dbVillaNumber.UpdateAsync(villaNumber);
+                VillaNumber model = _mapper.Map<VillaNumber>(villaUpdateDto);
+                await _dbVillaNumber.UpdateAsync(model);
 
                 _response.StatusCode = HttpStatusCode.NoContent;
                 _response.IsSuccess = true;
@@ -149,6 +148,7 @@ namespace MagicVilla_VillaAPI.Controllers
             }
             return _response;
         }
+
 
         [HttpDelete("{villaNo:int}", Name = "DeleteVillaNumber")]
         [ProducesResponseType(StatusCodes.Status200OK)]
