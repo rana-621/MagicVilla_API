@@ -6,6 +6,7 @@ using MagicVilla_Web.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
+using System.Net;
 
 namespace MagicVilla_Web.Controllers
 {
@@ -50,9 +51,43 @@ namespace MagicVilla_Web.Controllers
             return View(villaNumberVM);
         }
 
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> CreateVillaNumber(VillaNumberCreateVM model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+
+        //        var response = await _villaNumberService.CreateAsync<APIResponse>(model.VillaNumber);
+        //        if (response != null && response.IsSuccess)
+        //        {
+        //            return RedirectToAction(nameof(IndexVillaNumber));
+        //        }
+        //        else
+        //        {
+        //            if (response.MessageErrors.Count > 0)
+        //            {
+        //                ModelState.AddModelError("MessageErrors", response.MessageErrors.FirstOrDefault());
+        //            }
+        //        }
+        //    }
+
+        //    var resp = await _villaService.GetAllAsync<APIResponse>();
+        //    if (resp != null && resp.IsSuccess)
+        //    {
+        //        model.VillaList = JsonConvert.DeserializeObject<List<VillaDTO>>
+        //            (Convert.ToString(resp.Result)).Select(i => new SelectListItem
+        //            {
+        //                Text = i.Name,
+        //                Value = i.Id.ToString()
+        //            }); ;
+        //    }
+        //    return View(model);
+        //}
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateVillaNumber(VillaNumberCreateVM model)
+        public async Task<IActionResult> CreateVillaNumber(VillaNumberCreateVM model)
         {
             if (ModelState.IsValid)
             {
@@ -61,10 +96,40 @@ namespace MagicVilla_Web.Controllers
                 {
                     return RedirectToAction(nameof(IndexVillaNumber));
                 }
+                else
+                {
+                    // تحقق من رسائل الخطأ في MessageErrors
+                    if (response.MessageErrors != null && response.MessageErrors.Count > 0)
+                    {
+                        ModelState.AddModelError("MessageErrors", response.MessageErrors.FirstOrDefault());
+                    }
+                    // تحقق من الـ Result لو فيه ModelState من الـ API
+                    if (response.Result != null && response.StatusCode == HttpStatusCode.BadRequest)
+                    {
+                        var errorDetails = JsonConvert.DeserializeObject<Dictionary<string, string[]>>(Convert.ToString(response.Result));
+                        foreach (var error in errorDetails)
+                        {
+                            foreach (var message in error.Value)
+                            {
+                                ModelState.AddModelError(error.Key, message);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // اعادة تعبئة VillaList
+            var resp = await _villaService.GetAllAsync<APIResponse>();
+            if (resp != null && resp.IsSuccess)
+            {
+                model.VillaList = JsonConvert.DeserializeObject<List<VillaDTO>>(Convert.ToString(resp.Result))
+                    .Select(i => new SelectListItem
+                    {
+                        Text = i.Name,
+                        Value = i.Id.ToString()
+                    });
             }
             return View(model);
-
         }
-
     }
 }

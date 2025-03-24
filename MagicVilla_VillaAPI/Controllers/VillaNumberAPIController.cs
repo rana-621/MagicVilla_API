@@ -29,7 +29,7 @@ namespace MagicVilla_VillaAPI.Controllers
         {
             try
             {
-                IEnumerable<VillaNumber> villaNumbers = await _dbVillaNumber.GetAllAsyc(includeProperties: "Villa");
+                IEnumerable<VillaNumber> villaNumbers = await _dbVillaNumber.GetAllAsync(includeProperties: "Villa");
                 _response.Result = _mapper.Map<List<VillaNumberDto>>(villaNumbers);
                 _response.StatusCode = HttpStatusCode.OK;
                 return Ok(_response);
@@ -56,7 +56,7 @@ namespace MagicVilla_VillaAPI.Controllers
                     _response.StatusCode = HttpStatusCode.BadRequest;
                     return BadRequest(_response);
                 }
-                var villaNumber = await _dbVillaNumber.GetAsyc(x => x.VillaNo == id);
+                var villaNumber = await _dbVillaNumber.GetAsync(x => x.VillaNo == id);
                 if (villaNumber == null)
                 {
                     _response.StatusCode = HttpStatusCode.NotFound;
@@ -74,42 +74,43 @@ namespace MagicVilla_VillaAPI.Controllers
             }
             return _response;
         }
-
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<APIResponse>> CreateVillaNumber([FromBody] VillaNumberCreateDto villaNumberCreateDto)
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<APIResponse>> CreateVillaNumber([FromBody] VillaNumberCreateDto createDTO)
         {
             try
             {
-                if (await _dbVillaNumber.GetAsyc(u => u.VillaNo == villaNumberCreateDto.VillaNo) != null)
-                {
-                    ModelState.AddModelError("MessageErrors", "Villa already Exists");
-                    _response.StatusCode = HttpStatusCode.BadRequest;
-                }
 
-                if (await _dbVilla.GetAsyc(u => u.Id == villaNumberCreateDto.VillaId) == null)
+                if (await _dbVillaNumber.GetAsync(u => u.VillaNo == createDTO.VillaNo) != null)
                 {
-                    ModelState.AddModelError("MessageErrors", "Villa does not exist or villa id is not valid");
+                    ModelState.AddModelError("MessageErrors", "Villa Number already Exists!");
                     return BadRequest(ModelState);
                 }
-
-
-                if (villaNumberCreateDto == null)
+                if (await _dbVilla.GetAsync(u => u.Id == createDTO.VillaId) == null)
                 {
-                    return BadRequest(villaNumberCreateDto);
+                    ModelState.AddModelError("MessageErrors", "Villa ID is Invalid!");
+                    return BadRequest(ModelState);
                 }
-                VillaNumber villaNumber = _mapper.Map<VillaNumber>(villaNumberCreateDto);
-                await _dbVillaNumber.CreateAsyc(villaNumber);
+                if (createDTO == null)
+                {
+                    return BadRequest(createDTO);
+                }
 
+                VillaNumber villaNumber = _mapper.Map<VillaNumber>(createDTO);
+
+
+                await _dbVillaNumber.CreateAsync(villaNumber);
                 _response.Result = _mapper.Map<VillaNumberDto>(villaNumber);
                 _response.StatusCode = HttpStatusCode.Created;
-                return CreatedAtRoute("GetVillaNumber", new { id = villaNumber.VillaNo }, _response);
+                return CreatedAtRoute("GetVilla", new { id = villaNumber.VillaNo }, _response);
             }
             catch (Exception ex)
             {
                 _response.IsSuccess = false;
-                _response.MessageErrors = new List<string> { ex.ToString() };
+                _response.MessageErrors
+                     = new List<string>() { ex.ToString() };
             }
             return _response;
         }
@@ -126,7 +127,7 @@ namespace MagicVilla_VillaAPI.Controllers
                 {
                     return BadRequest();
                 }
-                if (await _dbVilla.GetAsyc(u => u.Id == villaUpdateDto.VillaId) == null)
+                if (await _dbVilla.GetAsync(u => u.Id == villaUpdateDto.VillaId) == null)
                 {
                     ModelState.AddModelError("MessageErrors", "Villa does not exist or villa id is not valid");
                     return BadRequest(ModelState);
@@ -160,12 +161,12 @@ namespace MagicVilla_VillaAPI.Controllers
                 {
                     return BadRequest();
                 }
-                var villaNumber = await _dbVillaNumber.GetAsyc(u => u.VillaNo == villaNo);
+                var villaNumber = await _dbVillaNumber.GetAsync(u => u.VillaNo == villaNo);
                 if (villaNumber == null)
                 {
                     return NotFound();
                 }
-                _dbVillaNumber.RemoveAsyc(villaNumber);
+                _dbVillaNumber.RemoveAsync(villaNumber);
                 _response.StatusCode = HttpStatusCode.NoContent;
                 _response.IsSuccess = true;
                 return Ok(_response);

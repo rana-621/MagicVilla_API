@@ -30,7 +30,7 @@ namespace MagicVilla_VillaAPI.Controllers
         {
             try
             {
-                IEnumerable<Villa> villaList = await _dbVilla.GetAllAsyc();
+                IEnumerable<Villa> villaList = await _dbVilla.GetAllAsync();
                 _response.Result = _mapper.Map<List<VillaDTO>>(villaList);
                 _response.StatusCode = HttpStatusCode.OK;
                 return Ok(_response);
@@ -57,7 +57,7 @@ namespace MagicVilla_VillaAPI.Controllers
                     _response.StatusCode = HttpStatusCode.BadRequest;
                     return BadRequest(_response);
                 }
-                var villa = await _dbVilla.GetAsyc(x => x.Id == id);
+                var villa = await _dbVilla.GetAsync(x => x.Id == id);
                 if (villa == null)
                 {
                     _response.StatusCode = HttpStatusCode.NotFound;
@@ -88,7 +88,7 @@ namespace MagicVilla_VillaAPI.Controllers
 
             try
             {
-                if (await _dbVilla.GetAsyc(u => u.Name.ToLower() == createDTO.Name.ToLower()) != null)
+                if (await _dbVilla.GetAsync(u => u.Name.ToLower() == createDTO.Name.ToLower()) != null)
                 {
                     ModelState.AddModelError("MessageErrors", "Villa already exists");
                     return BadRequest(ModelState);
@@ -101,7 +101,7 @@ namespace MagicVilla_VillaAPI.Controllers
 
 
                 Villa model = _mapper.Map<Villa>(createDTO);
-                await _dbVilla.CreateAsyc(model);
+                await _dbVilla.CreateAsync(model);
 
                 _response.Result = _mapper.Map<VillaDTO>(model);
                 _response.StatusCode = HttpStatusCode.Created;
@@ -129,12 +129,12 @@ namespace MagicVilla_VillaAPI.Controllers
                 {
                     return BadRequest();
                 }
-                var villa = await _dbVilla.GetAsyc(u => u.Id == id);
+                var villa = await _dbVilla.GetAsync(u => u.Id == id);
                 if (villa == null)
                 {
                     return NotFound();
                 }
-                _dbVilla.RemoveAsyc(villa);
+                _dbVilla.RemoveAsync(villa);
                 _response.StatusCode = HttpStatusCode.NoContent;
                 _response.IsSuccess = true;
                 return Ok(_response);
@@ -185,7 +185,7 @@ namespace MagicVilla_VillaAPI.Controllers
             {
                 return BadRequest();
             }
-            var villa = await _dbVilla.GetAsyc(u => u.Id == id, tracked: false);
+            var villa = await _dbVilla.GetAsync(u => u.Id == id, tracked: false);
 
             VillaUpdateDTO villaDto = _mapper.Map<VillaUpdateDTO>(villa);
 
