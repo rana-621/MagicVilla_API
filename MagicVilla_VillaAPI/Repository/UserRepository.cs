@@ -36,7 +36,11 @@ namespace MagicVilla_VillaAPI.Repository
                 && u.Password == loginRequestDTO.Password);
             if (user == null)
             {
-                return null;
+                return new LoginResponseDTO()
+                {
+                    User = user,
+                    Token = ""
+                };
             }
 
             //if user was found generate JWT token
