@@ -1,4 +1,5 @@
 ﻿using MagicVilla_VillaAPI.Data;
+using MagicVilla_VillaAPI.Models;
 using MagicVilla_VillaAPI.Models.Dto;
 using MagicVilla_VillaAPI.Repository.IRepository;
 
@@ -15,17 +16,32 @@ namespace MagicVilla_VillaAPI.Repository
 
         public bool isUniqueUser(string username)
         {
-            throw new NotImplementedException();
+            var user = _db.LocalUsers.FirstOrDefault(u => u.UserName == username);
+            if (user == null)
+            {
+                return true;
+            }
+            return false;
         }
 
-        public Task<LoginResponseDTO> Login(LoginRequestDTO loginRequestDTO)
+        public async Task<LoginResponseDTO> Login(LoginRequestDTO loginRequestDTO)
         {
             throw new NotImplementedException();
         }
 
-        public Task<LoginResponseDTO> Register(RegisterationRequestDTO registerationRequestDTO)
+        public async Task<LocalUser> Register(RegisterationRequestDTO registerationRequestDTO)
         {
-            throw new NotImplementedException();
+            LocalUser user = new()
+            {
+                UserName = registerationRequestDTO.UserName,
+                Name = registerationRequestDTO.Name,
+                Password = registerationRequestDTO.Password,
+                Role = registerationRequestDTO.Role
+            };
+            _db.LocalUsers.Add(user);
+            await _db.SaveChangesAsync();
+            user.Password = "";
+            return user;
         }
     }
 }
