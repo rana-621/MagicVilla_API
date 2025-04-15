@@ -18,6 +18,7 @@ namespace MagicVilla_Web
 
             builder.Services.AddHttpClient<IVillaNumberService, VillaNumberService>();
             builder.Services.AddScoped<IVillaNumberService, VillaNumberService>();
+            builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             builder.Services.AddHttpClient<IAuthService, IAuthService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
@@ -41,7 +42,7 @@ namespace MagicVilla_Web
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseSession();
             app.UseRouting();
 
             app.UseAuthorization();
