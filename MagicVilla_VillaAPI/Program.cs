@@ -55,7 +55,24 @@ namespace MagicVilla_VillaAPI
                 {
                     Version = "V1",
                     Title = "Magic Villa API",
-                    Description = "Api version to manage villa",
+                    Description = "Api version1 to manage villa",
+                    TermsOfService = new Uri("https://example.com/terms"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Magic Villa",
+                        Url = new Uri("https://example.com/contact"),
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "Use under LICX",
+                        Url = new Uri("https://example.com/license"),
+                    }
+                });
+                options.SwaggerDoc("v2", new OpenApiInfo
+                {
+                    Version = "V2",
+                    Title = "Magic Villa API",
+                    Description = "Api version2 to manage villa",
                     TermsOfService = new Uri("https://example.com/terms"),
                     Contact = new OpenApiContact
                     {
@@ -117,6 +134,7 @@ namespace MagicVilla_VillaAPI
                 app.UseSwaggerUI(options =>
                 {
                     options.SwaggerEndpoint("/swagger/v1/swagger.json", "Magic_VillaV1");
+                    options.SwaggerEndpoint("/swagger/v2/swagger.json", "Magic_VillaV2");
                 });
             }
 
