@@ -28,7 +28,7 @@ namespace MagicVilla_VillaAPI.Controllers.v1
         }
 
         [HttpGet]
-        [MapToApiVersion("1.0")]
+        //[MapToApiVersion("1.0")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status200OK)]
