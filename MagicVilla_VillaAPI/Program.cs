@@ -50,6 +50,24 @@ namespace MagicVilla_VillaAPI
                         new List<string>()
                     }
                 });
+
+                options.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "V1",
+                    Title = "Magic Villa API",
+                    Description = "Api version to manage villa",
+                    TermsOfService = new Uri("https://example.com/terms"),
+                    Contact = new OpenApiContact
+                    {
+                        Name = "Magic Villa",
+                        Url = new Uri("https://example.com/contact"),
+                    },
+                    License = new OpenApiLicense
+                    {
+                        Name = "Use under LICX",
+                        Url = new Uri("https://example.com/license"),
+                    }
+                });
             });
 
             builder.Services.AddDbContext<ApplicationDbContext>(option =>
@@ -96,7 +114,10 @@ namespace MagicVilla_VillaAPI
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(options =>
+                {
+                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Magic_VillaV1");
+                });
             }
 
             app.UseHttpsRedirection();
