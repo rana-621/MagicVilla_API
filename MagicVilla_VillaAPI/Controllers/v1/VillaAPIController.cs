@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
 
-namespace MagicVilla_VillaAPI.Controllers
+namespace MagicVilla_VillaAPI.Controllers.v1
 {
     [Route("api/v{Version:apiVersion}/VillaAPI")]
     //[Route("/VillaAPI")]
@@ -24,7 +24,7 @@ namespace MagicVilla_VillaAPI.Controllers
         {
             _dbVilla = dbVilla;
             _mapper = mapper;
-            this._response = new();
+            _response = new();
         }
 
         [HttpGet]

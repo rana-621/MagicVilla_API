@@ -6,13 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
 
-namespace MagicVilla_VillaAPI.Controllers
+namespace MagicVilla_VillaAPI.Controllers.v1
 {
     [Route("api/v{Version:apiVersion}/VillaNumberAPI")]
     //[Route("/api/VillaNumberAPI")]
     [ApiController]
     [ApiVersion("1.0")]
-    [ApiVersion("2.0")]
+
     public class VillaNumberAPIController : ControllerBase
     {
         private readonly APIResponse _response;
@@ -23,7 +23,7 @@ namespace MagicVilla_VillaAPI.Controllers
         {
             _dbVillaNumber = dbVillaNumber;
             _mapper = mapper;
-            this._response = new();
+            _response = new();
             _dbVilla = dbVilla;
         }
         [HttpGet("GetAll")]
@@ -45,13 +45,6 @@ namespace MagicVilla_VillaAPI.Controllers
             return _response;
         }
 
-
-        [HttpGet("GetString")]
-        [MapToApiVersion("2.0")]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
 
 
         [HttpGet("{id:int}", Name = "GetVillaNumber")]
