@@ -8,8 +8,11 @@ using System.Net;
 
 namespace MagicVilla_VillaAPI.Controllers
 {
-    [Route("/api/VillaNumberAPI")]
+    [Route("/api/v{Version:apiVersion}/VillaNumberAPI")]
+    //[Route("/api/VillaNumberAPI")]
     [ApiController]
+    [ApiVersion("1.0")]
+    [ApiVersion("2.0")]
     public class VillaNumberAPIController : ControllerBase
     {
         private readonly APIResponse _response;
@@ -41,6 +44,15 @@ namespace MagicVilla_VillaAPI.Controllers
             }
             return _response;
         }
+
+
+        [HttpGet]
+        [MapToApiVersion("2.0")]
+        public IEnumerable<string> Get()
+        {
+            return new string[] { "value1", "value2" };
+        }
+
 
         [HttpGet("{id:int}", Name = "GetVillaNumber")]
         [ProducesResponseType(StatusCodes.Status200OK)]
