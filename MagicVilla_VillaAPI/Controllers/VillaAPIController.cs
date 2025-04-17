@@ -10,10 +10,11 @@ using System.Net;
 
 namespace MagicVilla_VillaAPI.Controllers
 {
-    //[Route("api/VillaAPI")] 
-    [Route("/VillaAPI")]
+    [Route("api/v{Version:apiVersion}/VillaAPI")]
+    //[Route("/VillaAPI")]
     [ApiController]
     [ApiVersion("1.0")]
+    [ApiVersion("2.0")]
     public class VillaAPIController : ControllerBase
     {
         private readonly APIResponse _response;
@@ -27,6 +28,7 @@ namespace MagicVilla_VillaAPI.Controllers
         }
 
         [HttpGet]
+        [MapToApiVersion("1.0")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -48,6 +50,12 @@ namespace MagicVilla_VillaAPI.Controllers
 
         }
 
+        [HttpGet]
+        [MapToApiVersion("2.0")]
+        public IEnumerable<string> Get()
+        {
+            return new string[] { "value1", "value2" };
+        }
 
         [HttpGet("{id:int}", Name = "GetVilla")]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
