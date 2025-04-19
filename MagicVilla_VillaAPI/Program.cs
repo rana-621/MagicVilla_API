@@ -87,6 +87,16 @@ namespace MagicVilla_VillaAPI
                 });
             });
 
+            builder.Services.AddControllers(options =>
+            {
+                options.CacheProfiles.Add("Default30",
+                    new CacheProfile()
+                    {
+                        Duration = 30
+                    });
+            }).AddNewtonsoftJson()
+                .AddXmlDataContractSerializerFormatters();
+
             builder.Services.AddDbContext<ApplicationDbContext>(option =>
             {
                 option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection"));
