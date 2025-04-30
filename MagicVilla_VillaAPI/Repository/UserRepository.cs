@@ -15,22 +15,25 @@ namespace MagicVilla_VillaAPI.Repository
     {
         private readonly ApplicationDbContext _db;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private string secretKey;
         private readonly IMapper _mapper;
         public UserRepository(ApplicationDbContext db,
             IConfiguration configuration,
             UserManager<ApplicationUser> userManager,
-            IMapper mapper = null)
+            IMapper mapper = null,
+            RoleManager<IdentityRole> roleManager = null)
         {
             _db = db;
             secretKey = configuration.GetValue<string>("ApiSettings:Secret");
             _userManager = userManager;
             _mapper = mapper;
+            _roleManager = roleManager;
         }
 
         public bool isUniqueUser(string username)
         {
-            var user = _db.ApplicatoinUsers.FirstOrDefault(u => u.UserName == username);
+            var user = _db.ApplicationUsers.FirstOrDefault(u => u.UserName == username);
             if (user == null)
             {
                 return true;
@@ -40,19 +43,21 @@ namespace MagicVilla_VillaAPI.Repository
 
         public async Task<LoginResponseDTO> Login(LoginRequestDTO loginRequestDTO)
         {
-            var user = _db.ApplicatoinUsers
+            var user = _db.ApplicationUsers
                 .FirstOrDefault(u => u.UserName.ToLower() == loginRequestDTO.UserName.ToLower());
 
             bool isValid = await _userManager.CheckPasswordAsync(user, loginRequestDTO.Password);
+
 
             if (user == null || isValid == false)
             {
                 return new LoginResponseDTO()
                 {
-                    User = null,
-                    Token = ""
+                    Token = "",
+                    User = null
                 };
             }
+
 
             //if user was found generate JWT token
             var roles = await _userManager.GetRolesAsync(user);
@@ -79,33 +84,38 @@ namespace MagicVilla_VillaAPI.Repository
             };
             return loginResponseDTO;
         }
-
         public async Task<UserDTO> Register(RegisterationRequestDTO registerationRequestDTO)
         {
             ApplicationUser user = new()
             {
                 UserName = registerationRequestDTO.UserName,
-                Name = registerationRequestDTO.Name,
+                Email = registerationRequestDTO.UserName,
                 NormalizedEmail = registerationRequestDTO.UserName.ToUpper(),
-                Email = registerationRequestDTO.UserName
+                Name = registerationRequestDTO.Name
             };
 
             try
             {
                 var result = await _userManager.CreateAsync(user, registerationRequestDTO.Password);
-                if (!result.Succeeded)
+                if (result.Succeeded)
                 {
+                    if (!_roleManager.RoleExistsAsync("admin").GetAwaiter().GetResult())
+                    {
+                        await _roleManager.CreateAsync(new IdentityRole("admin"));
+                        await _roleManager.CreateAsync(new IdentityRole("customer"));
+                    }
                     await _userManager.AddToRoleAsync(user, "admin");
-                    var userToReturn = _db.ApplicatoinUsers
-                            .FirstOrDefault(u => u.UserName == registerationRequestDTO.UserName);
-
+                    var userToReturn = _db.ApplicationUsers
+                        .FirstOrDefault(u => u.UserName == registerationRequestDTO.UserName);
                     return _mapper.Map<UserDTO>(userToReturn);
+
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                //throw new Exception(ex.Message);
+
             }
+
             return new UserDTO();
         }
     }
